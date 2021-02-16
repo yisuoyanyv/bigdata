@@ -34,6 +34,9 @@ public class WordcountDriver {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
+        // 8 指定需要使用combiner,以及用哪个类作为combiner的逻辑
+        job.setCombinerClass(WordcountCombiner.class);
+
         // 6 设置输入和输出路径
         FileInputFormat.setInputPaths(job,new Path(args[0]));
         FileOutputFormat.setOutputPath(job,new Path(args[1]));
