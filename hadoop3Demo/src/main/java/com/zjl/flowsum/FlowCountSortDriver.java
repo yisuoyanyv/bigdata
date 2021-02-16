@@ -15,7 +15,7 @@ import java.io.IOException;
 public class FlowCountSortDriver {
     public static void main(String[] args) throws IllegalArgumentException, IOException,ClassNotFoundException,InterruptedException {
         //输入输出路径需要根据自己电脑上实际的输入输出路径设置
-        args=new String[]{"E:\\test\\phoneOut\\part-r-00000", "e:/test/phoneOutSort"};
+        args=new String[]{"E:\\test\\phoneOut\\part-r-00000", "e:/test/phoneOutSortPartition"};
 
         // 1 获取配置信息，或者job对象实例
         Configuration configuration=new Configuration();
@@ -35,6 +35,11 @@ public class FlowCountSortDriver {
         // 5 指定最终输出的数据的kv类型
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(FlowBean.class);
+
+        // 8 加载自定义分区类
+        job.setPartitionerClass(ProvincePartitionerBeanKey.class);
+        // 设置 Reducetask个数
+        job.setNumReduceTasks(5);
 
         // 6 指定job的输入原始文件所在目录及输出目录
         FileInputFormat.setInputPaths(job,new Path(args[0]));
