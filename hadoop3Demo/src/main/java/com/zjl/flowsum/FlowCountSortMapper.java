@@ -1,4 +1,4 @@
-package com.zjl.beanWritable;
+package com.zjl.flowsum;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -8,10 +8,12 @@ import java.io.IOException;
 
 /**
  * mapper输出的value时自定义的类
+ *
+ * Mapper<LongWritable,Text,FlowBean,Text> 与FlowCountMapper中次序有调整
  */
-public class FlowCountMapper extends Mapper<LongWritable,Text, Text,FlowBean> {
-    FlowBean v=new FlowBean();
-    Text k=new Text();
+public class FlowCountSortMapper extends Mapper<LongWritable,Text,FlowBean,Text> {
+    FlowBean bean=new FlowBean();
+    Text v=new Text();
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
@@ -21,16 +23,15 @@ public class FlowCountMapper extends Mapper<LongWritable,Text, Text,FlowBean> {
         String[] fields = line.split("\t");
         // 3 封装对象
         //取出收集号码
-        String phoneNum=fields[1];
+        String phoneNum=fields[0];
         //取出上行流量和下行流量
-        long upFlow = Long.parseLong(fields[fields.length - 3]);
-        long downFlow = Long.parseLong(fields[fields.length - 2]);
+        long upFlow = Long.parseLong(fields[1]);
+        long downFlow = Long.parseLong(fields[2]);
 
-        k.set(phoneNum);
-        v.setDownFlow(downFlow);
-        v.setUpFlow(upFlow);
+        bean.set(upFlow,downFlow);
+        v.set(phoneNum);
 
         // 4 写出
-        context.write(k,v);
+        context.write(bean,v);
     }
 }

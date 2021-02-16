@@ -6,6 +6,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
@@ -32,6 +33,11 @@ public class WordcountDriverOnWindowsToYarn {
         // 2 设置 jar 加载路径
 //        job.setJarByClass(WordcountDriverOnWindowsToYarn.class);
         job.setJar("F:\\workspace\\bigdata\\hadoop3Demo\\target\\hadoop3Demo-1.0-SNAPSHOT.jar");
+
+        //如果不设置InputFormat,它默认用的是 TextInputFormat.class
+        job.setInputFormatClass(CombineTextInputFormat.class);
+        //虚拟存储切片最大值设置4m
+        CombineTextInputFormat.setMaxInputSplitSize(job,4194304);
 
         // 3 设置map和reduce类
         job.setMapperClass(WordcountMapper.class);

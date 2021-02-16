@@ -1,14 +1,16 @@
-package com.zjl.beanWritable;
+package com.zjl.flowsum;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
+
 /**
  * 编写流量统计的Bean对象
  */
 // 1 实现writable接口
-public class FlowBean implements Writable {
+public class FlowBean implements Writable, WritableComparable<FlowBean> {
     private long upFlow;
     private long downFlow;
     private long sumFlow;
@@ -25,6 +27,12 @@ public class FlowBean implements Writable {
         this.sumFlow=upFlow+downFlow;
     }
 
+    public void set(long upFlow,long downFlow){
+        this.upFlow=upFlow;
+        this.downFlow=downFlow;
+        this.sumFlow=upFlow+downFlow;
+    }
+
     //3 写序列化方法
 
     @Override
@@ -34,7 +42,7 @@ public class FlowBean implements Writable {
         out.writeLong(sumFlow);
     }
 
-    //4 反序列号方法
+    //4 反序列化方法
     //5 反序列化方法读顺序必须和写序列化方法的写顺序必须一致
 
     @Override
@@ -75,5 +83,19 @@ public class FlowBean implements Writable {
 
     public void setSumFlow(long sumFlow) {
         this.sumFlow = sumFlow;
+    }
+
+    @Override
+    public int compareTo(FlowBean bean) {
+        int result;
+        // 按照总流量大小，倒序排列
+        if(sumFlow> bean.getSumFlow()){
+            result=-1;
+        }else if (sumFlow< bean.getSumFlow()){
+            result=1;
+        }else{
+            result=0;
+        }
+        return result;
     }
 }

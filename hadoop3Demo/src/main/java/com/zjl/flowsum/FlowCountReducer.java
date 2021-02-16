@@ -1,4 +1,4 @@
-package com.zjl.beanWritable;
+package com.zjl.flowsum;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
