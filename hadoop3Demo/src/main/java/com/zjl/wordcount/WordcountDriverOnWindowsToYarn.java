@@ -20,6 +20,9 @@ public class WordcountDriverOnWindowsToYarn {
 
         // 1 获取配置信息以及封装任务
         Configuration configuration=new Configuration();
+        //指定提交到yarn的 hive队列中
+        configuration.set("mapred.job.queue.name","hive");
+
         //设置HDFS NameNode的地址
         configuration.set("fs.defaultFS","hdfs://hadoop102:9820");
         //指定MapReduce运行在Yarn上
